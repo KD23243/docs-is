@@ -140,11 +140,13 @@ jobs:
             echo "| Lifetime | $DURATION_MINUTES min |"
             echo ""
             echo "The link goes dead when this job ends."
+            echo ""
+            echo "> :warning: Please double-check the URL before clicking. The preview runs on a one-time public tunnel — confirm the link in this summary matches the one in any PR comment, and make sure it points to \`trycloudflare.com\`."
           } >> "$GITHUB_STEP_SUMMARY"
 
           if [ -n "$PR_NUMBER" ]; then
-            BODY=$(printf '**Docs preview:** %s\n\nProduct: `%s` · Ref: `%s` · Live for %s min.\n\n_Triggered by @%s via the Preview Docs workflow._' \
-              "$URL" "$PRODUCT" "$RESOLVED_REF" "$DURATION_MINUTES" "$GITHUB_ACTOR")
+            BODY=$(printf '**Docs preview:** %s\n\nProduct: `%s` · Ref: `%s` · Live for %s min.\n\n> :warning: Please double-check the URL before clicking. Confirm it matches the link in the [workflow run summary](%s/actions/runs/%s) and that it points to `trycloudflare.com`.\n\n_Triggered by @%s via the Preview Docs workflow._' \
+              "$URL" "$PRODUCT" "$RESOLVED_REF" "$DURATION_MINUTES" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$GITHUB_ACTOR")
             gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body "$BODY" || \
               echo "::warning::Failed to post PR comment (continuing anyway)."
           fi
